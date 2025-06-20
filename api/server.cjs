@@ -1,29 +1,31 @@
 const express = require('express');
 const app = express();
+const port = process.env.PORT || 3000;
+
 app.use(express.json());
 
-let mails = [];
+// Liste de mails simulée
+const mails = [
+    { id: 1, sender: 'example@mail.com', content: 'Hello world from Render server' }
+];
 
-// ➕ Ajouter un mail
+// GET /mails → récupérer la liste des mails
+app.get('/mails', (req, res) => {
+    res.json(mails);
+});
+
+// POST /mails → ajouter un mail (pour test depuis Postman ou n8n ensuite)
 app.post('/mails', (req, res) => {
+    const { sender, content } = req.body;
     const newMail = {
-        sender: req.body.sender,
-        content: req.body.content
+        id: mails.length + 1,
+        sender,
+        content
     };
     mails.push(newMail);
     res.status(201).json(newMail);
 });
 
-// 📩 Voir tous les mails
-app.get('/mails', (req, res) => {
-    res.json(mails);
-});
-
-// 🏠 Page d'accueil
-app.get('/', (req, res) => {
-    res.send('✅ Serveur mails opérationnel');
-});
-
-app.listen(3000, () => {
-    console.log('✅ Server is running at http://localhost:3000');
+app.listen(port, () => {
+    console.log(`✅ Server is running at http://localhost:${port}`);
 });
