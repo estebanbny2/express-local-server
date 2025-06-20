@@ -1,25 +1,27 @@
 const express = require('express');
 const app = express();
-
 app.use(express.json());
 
-let cars = [
-    { id: 1, brand: 'Renault', model: 'Clio' },
-    { id: 2, brand: 'Peugeot', model: '208' },
-];
+let mails = [];
 
-app.get('/cars', (req, res) => {
-    res.json(cars);
+// ➕ Ajouter un mail
+app.post('/mails', (req, res) => {
+    const newMail = {
+        sender: req.body.sender,
+        content: req.body.content
+    };
+    mails.push(newMail);
+    res.status(201).json(newMail);
 });
 
-app.post('/cars', (req, res) => {
-    const newCar = {
-        id: Date.now(),
-        brand: req.body.brand,
-        model: req.body.model,
-    };
-    cars.push(newCar);
-    res.status(201).json(newCar);
+// 📩 Voir tous les mails
+app.get('/mails', (req, res) => {
+    res.json(mails);
+});
+
+// 🏠 Page d'accueil
+app.get('/', (req, res) => {
+    res.send('✅ Serveur mails opérationnel');
 });
 
 app.listen(3000, () => {
